@@ -3,11 +3,14 @@ import $ from 'jquery';
 import './App.css';
 import { GoogleMapLoader, GoogleMap, Marker } from 'react-google-maps'
 import SearchResults from './components/SearchResults';
+import Loader from './components/Loader';
 
 export default class App extends Component {
   constructor() {
     super();
     this.state = {
+      isloading: false,
+      showMap: false,
       address: {
         bairro: null,
         cep: null,
@@ -16,8 +19,7 @@ export default class App extends Component {
         logradouro: null,
         uf: null,
         geometry: {}
-      },
-      showMap: false
+      }
     };
     this.handleForm = this.handleForm.bind(this);
     this.getAddress = this.getAddress.bind(this);
@@ -26,6 +28,9 @@ export default class App extends Component {
   handleForm(event) {
     event.preventDefault();
     this.getAddress(this.refs.postalCode.value, this.getGeometry);
+    this.setState({
+      isloading: true
+    });
   }
   getAddress(postalCode, callback) {
     $.getJSON({
@@ -50,11 +55,17 @@ export default class App extends Component {
       $.getJSON({
           url: `https://maps.googleapis.com/maps/api/geocode/json?address=${location.logradouro}-${location.bairro}-${location.localidade}`,
           success: (data) => {
-            this.setState({ showMap : true, geometry: data.results[0].geometry.location});
+            this.setState({
+              isloading: false,
+              showMap : true,
+              geometry: data.results[0].geometry.location
+            });
           }
       });
   }
   render() {
+    const isloading = this.state.isloading;
+    const showMap = this.state.showMap && !isloading;
     return (
       <div className="main">
         <div className="container">
@@ -68,7 +79,11 @@ export default class App extends Component {
             <button>Buscar</button>
           </form>
           {
-            this.state.showMap && 
+            isloading &&  <Loader />
+          }
+
+          {
+            showMap && 
             <div className="search-results">
               <SearchResults
                 address={ this.state.address }
