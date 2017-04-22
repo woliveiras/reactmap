@@ -4,7 +4,7 @@ import './App.css';
 import { GoogleMapLoader, GoogleMap, Marker } from 'react-google-maps'
 import SearchResults from './components/SearchResults';
 
-class App extends Component {
+export default class App extends Component {
   constructor() {
     super();
     this.state = {
@@ -56,9 +56,12 @@ class App extends Component {
   }
   render() {
     return (
-      <div>
-          <h1>Consulta de Endereço</h1>
-          <form onSubmit={ this.handleForm }>
+      <div className="main">
+        <div className="container">
+          <header>
+            <h1>Consulta de Endereço</h1>
+          </header>
+          <form  className="search-engine" onSubmit={ this.handleForm }>
             <h2>Consultar</h2>
             <label>CEP: </label>
             <input type="text" placeholder="02050-010" required ref="postalCode"/>
@@ -66,12 +69,13 @@ class App extends Component {
           </form>
           {
             this.state.showMap && 
-            <div>
+            <div className="search-results">
               <SearchResults
                 address={ this.state.address }
                 geometry={ this.state.geometry }/>
               <GoogleMapLoader
-                containerElement={ <div style={{height: 500, width: '100%'}} /> }
+                containerElement={ <div 
+                className="search-results__map" style={{height: 500, width: '100%'}} /> }
                 googleMapElement={
                   <GoogleMap defaultZoom={15} center={{ lat: this.state.geometry.lat, lng: this.state.geometry.lng}} >
                     <Marker position={{ lat: this.state.geometry.lat, lng: this.state.geometry.lng}} />
@@ -79,9 +83,8 @@ class App extends Component {
                 } />
             </div>
           }
+        </div>
       </div>
     );
   }
 }
-
-export default App;

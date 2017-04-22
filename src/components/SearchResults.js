@@ -8,8 +8,6 @@ export default class SearchResults extends Component {
                 <p>{ this.props.address.bairro }</p>
                 <p>{ this.props.address.localidade } - { this.props.address.uf }</p>
                 <p>{ this.props.address.cep }</p>
-                <p>lat: {this.props.geometry.lat}</p>
-                <p>lng: {this.props.geometry.lng}</p>
               </address>
         );
     }    
