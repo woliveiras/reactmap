@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import $ from 'jquery';
 import './App.css';
 import { GoogleMapLoader, GoogleMap, Marker } from 'react-google-maps'
+import SearchResults from './components/SearchResults';
 
 class App extends Component {
   constructor() {
@@ -28,7 +29,7 @@ class App extends Component {
   }
   getAddress(postalCode, callback) {
     $.getJSON({
-        url: `https://viacep.com.br/ws/${this.refs.postalCode.value}/json/?callback=callback`,    
+        url: `https://viacep.com.br/ws/${postalCode}/json/?callback=callback`,    
         dataType: 'jsonp',
         success: (data) => {
           this.setState({
@@ -66,22 +67,16 @@ class App extends Component {
           {
             this.state.showMap && 
             <div>
-              <address>
-                <strong>{ this.state.address.logradouro }</strong>
-                <p>{ this.state.address.bairro }</p>
-                <p>{ this.state.address.localidade } - { this.state.address.uf }</p>
-                <p>{ this.state.address.cep }</p>
-                <p>lat: {this.state.geometry.lat}</p>
-                <p>lng: {this.state.geometry.lng}</p>
-              </address>
+              <SearchResults
+                address={ this.state.address }
+                geometry={ this.state.geometry }/>
               <GoogleMapLoader
                 containerElement={ <div style={{height: 500, width: '100%'}} /> }
                 googleMapElement={
                   <GoogleMap defaultZoom={15} center={{ lat: this.state.geometry.lat, lng: this.state.geometry.lng}} >
                     <Marker position={{ lat: this.state.geometry.lat, lng: this.state.geometry.lng}} />
                   </GoogleMap>
-                }
-              />
+                } />
             </div>
           }
       </div>
