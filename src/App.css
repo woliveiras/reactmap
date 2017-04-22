@@ -197,6 +197,15 @@ h1 {
     animation-delay: 0.8s;
 }
 
+.error {
+    padding: 20px;
+    line-height: 30px;
+    margin-top: 10px;
+    border: 1px solid #e04242;
+    color: #a72727;
+    background: #ffc0c0;
+}
+
 @media (min-width: 480px) {
     h1 {
         padding-left: 0;

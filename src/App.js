@@ -4,6 +4,7 @@ import './App.css';
 import { GoogleMapLoader, GoogleMap, Marker } from 'react-google-maps'
 import SearchResults from './components/SearchResults';
 import Loader from './components/Loader';
+import Error from './components/Error';
 
 export default class App extends Component {
   constructor() {
@@ -11,6 +12,7 @@ export default class App extends Component {
     this.state = {
       isloading: false,
       showMap: false,
+      error: false,
       address: {
         bairro: null,
         cep: null,
@@ -39,6 +41,7 @@ export default class App extends Component {
         dataType: 'jsonp',
         success: (data) => {
           this.setState({
+            error: false,
             address: {
               bairro: data.bairro,
               cep: data.cep,
@@ -49,6 +52,13 @@ export default class App extends Component {
             }
           });
           callback(data);
+        },
+        error: (res) => {
+          if (res !== 200) {
+            this.setState({
+              error: true
+            });
+          }
         }
     });
   }
@@ -57,10 +67,18 @@ export default class App extends Component {
           url: `https://maps.googleapis.com/maps/api/geocode/json?address=${location.logradouro}-${location.bairro}-${location.localidade}`,
           success: (data) => {
             this.setState({
+              error: false,
               isloading: false,
               showMap : true,
               geometry: data.results[0].geometry.location
             });
+          },
+          error: (res) => {
+            if (res !== 200) {
+              this.setState({
+                error: true
+              });
+            }
           }
       });
   }
@@ -70,8 +88,9 @@ export default class App extends Component {
     })
   }
   render() {
-    const isloading = this.state.isloading;
-    const showMap = this.state.showMap && !isloading;
+    const error = this.state.error;
+    const isloading = this.state.isloading && error === false;
+    const showMap = this.state.showMap && !isloading && error === false;    
     return (
       <div className="main">
         <div className="container">
@@ -84,6 +103,11 @@ export default class App extends Component {
             <input type="text" placeholder="02050-010" required ref="postalCode"/>
             <button>Buscar</button>
           </form>
+          
+          {
+            error &&  <Error />
+          }
+          
           {
             isloading &&  <Loader />
           }
