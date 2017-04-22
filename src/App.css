@@ -141,6 +141,7 @@ h1 {
     font-size: 20px;
     padding: 10px 15px;
     top: 0;
+    cursor: pointer;
 }
 
 @keyframes loading {
