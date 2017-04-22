@@ -24,6 +24,7 @@ export default class App extends Component {
     this.handleForm = this.handleForm.bind(this);
     this.getAddress = this.getAddress.bind(this);
     this.getGeometry = this.getGeometry.bind(this);
+    this.closeMap = this.closeMap.bind(this);
   }
   handleForm(event) {
     event.preventDefault();
@@ -63,6 +64,11 @@ export default class App extends Component {
           }
       });
   }
+  closeMap() {
+    this.setState({
+      showMap: false
+    })
+  }
   render() {
     const isloading = this.state.isloading;
     const showMap = this.state.showMap && !isloading;
@@ -87,7 +93,8 @@ export default class App extends Component {
             <div className="search-results">
               <SearchResults
                 address={ this.state.address }
-                geometry={ this.state.geometry }/>
+                geometry={ this.state.geometry }
+                closeMap={ this.closeMap }/>
               <GoogleMapLoader
                 containerElement={ <div 
                 className="search-results__map" style={{height: 500, width: '100%'}} /> }
