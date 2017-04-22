@@ -23,55 +23,30 @@ export default class App extends Component {
         geometry: {}
       }
     };
-    this.handleForm = this.handleForm.bind(this);
-    this.getAddress = this.getAddress.bind(this);
-    this.getGeometry = this.getGeometry.bind(this);
-    this.closeMap = this.closeMap.bind(this);
-  }
-  handleForm(event) {
-    event.preventDefault();
-    this.getAddress(this.refs.postalCode.value, this.getGeometry);
-    this.setState({
-      isloading: true
-    });
-  }
-  getAddress(postalCode, callback) {
-    $.getJSON({
-        url: `https://viacep.com.br/ws/${postalCode}/json/?callback=callback`,    
-        dataType: 'jsonp',
-        success: (data) => {
-          this.setState({
-            error: false,
-            address: {
-              bairro: data.bairro,
-              cep: data.cep,
-              complemento: data.complemento,
-              localidade: data.localidade,
-              logradouro: data.logradouro,
-              uf: data.uf
-            }
-          });
-          callback(data);
-        },
-        error: (res) => {
-          if (res !== 200) {
-            this.setState({
-              error: true
-            });
-          }
-        }
-    });
-  }
-  getGeometry(location) {
+    this.handleForm = (event) => {
+      event.preventDefault();
+      this.getAddress(event.target.postalCode.value, this.getGeometry);
+      this.setState({
+        isloading: true
+      });
+    };
+    this.getAddress = (postalCode, callback) => {
       $.getJSON({
-          url: `https://maps.googleapis.com/maps/api/geocode/json?address=${location.logradouro}-${location.bairro}-${location.localidade}`,
+          url: `https://viacep.com.br/ws/${postalCode}/json/?callback=callback`,    
+          dataType: 'jsonp',
           success: (data) => {
             this.setState({
               error: false,
-              isloading: false,
-              showMap : true,
-              geometry: data.results[0].geometry.location
+              address: {
+                bairro: data.bairro,
+                cep: data.cep,
+                complemento: data.complemento,
+                localidade: data.localidade,
+                logradouro: data.logradouro,
+                uf: data.uf
+              }
             });
+            callback(data);
           },
           error: (res) => {
             if (res !== 200) {
@@ -81,11 +56,32 @@ export default class App extends Component {
             }
           }
       });
-  }
-  closeMap() {
-    this.setState({
-      showMap: false
-    })
+    };
+    this.getGeometry = (location) => {
+        $.getJSON({
+            url: `https://maps.googleapis.com/maps/api/geocode/json?address=${location.logradouro}-${location.bairro}-${location.localidade}`,
+            success: (data) => {
+              this.setState({
+                error: false,
+                isloading: false,
+                showMap : true,
+                geometry: data.results[0].geometry.location
+              });
+            },
+            error: (res) => {
+              if (res !== 200) {
+                this.setState({
+                  error: true
+                });
+              }
+            }
+        });
+    };
+    this.closeMap = () => {
+      this.setState({
+        showMap: false
+      })
+    };
   }
   render() {
     const error = this.state.error;
@@ -100,7 +96,7 @@ export default class App extends Component {
           <form  className="search-engine" onSubmit={ this.handleForm }>
             <h2>Consultar</h2>
             <label>CEP: </label>
-            <input type="number" placeholder="02050-010" required autoFocus ref="postalCode"/>
+            <input type="number" placeholder="02050-010" required autoFocus name="postalCode"/>
             <button>Buscar</button>
           </form>
           
