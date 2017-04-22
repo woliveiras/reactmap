@@ -100,7 +100,7 @@ export default class App extends Component {
           <form  className="search-engine" onSubmit={ this.handleForm }>
             <h2>Consultar</h2>
             <label>CEP: </label>
-            <input type="text" placeholder="02050-010" required ref="postalCode"/>
+            <input type="number" placeholder="02050-010" required autoFocus ref="postalCode"/>
             <button>Buscar</button>
           </form>
           
