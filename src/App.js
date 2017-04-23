@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 import './App.css';
-import { GoogleMapLoader, GoogleMap, Marker } from 'react-google-maps'
+import SearchEngine from './components/SearchEngine';
 import SearchResults from './components/SearchResults';
 import Loader from './components/Loader';
 import Error from './components/Error';
@@ -93,37 +93,15 @@ export default class App extends Component {
           <header>
             <h1>Consulta de Endereço</h1>
           </header>
-          <form  className="search-engine" onSubmit={ this.handleForm }>
-            <h2>Consultar</h2>
-            <label>CEP: </label>
-            <input type="number" placeholder="02050-010" required autoFocus name="postalCode"/>
-            <button>Buscar</button>
-          </form>
-          
-          {
-            error &&  <Error />
-          }
-          
-          {
-            isloading &&  <Loader />
-          }
-
-          {
-            showMap && 
-            <div className="search-results">
-              <SearchResults
-                address={ this.state.address }
-                geometry={ this.state.geometry }
-                closeMap={ this.closeMap }/>
-              <GoogleMapLoader
-                containerElement={ <div 
-                className="search-results__map" style={{height: 500, width: '100%'}} /> }
-                googleMapElement={
-                  <GoogleMap defaultZoom={15} center={{ lat: this.state.geometry.lat, lng: this.state.geometry.lng}} >
-                    <Marker position={{ lat: this.state.geometry.lat, lng: this.state.geometry.lng}} />
-                  </GoogleMap>
-                } />
-            </div>
+          <SearchEngine handleForm={ this.handleForm } />
+          { error &&  <Error /> }
+          { isloading &&  <Loader /> }
+          { showMap &&
+            <SearchResults 
+              address={ this.state.address }
+              geometry={ this.state.geometry }
+              closeMap={ this.closeMap }
+            />
           }
         </div>
       </div>
