@@ -1,12 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class Error extends Component {
-  render() {
+const Error = () => {
     return(
       <div className="error">
           <p>Aconteceu algo errado! Não encontrei o CEP informado. :(</p>
       </div>
     );
-  }
 }
+
 export default Error
