@@ -1,3 +1,4 @@
-# reactmap
+# ReactMap
 
-*Experimental* Webapp to search address with React
+*Experimental* Webapp to search address made with React
+
